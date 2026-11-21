@@ -4,7 +4,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import br.com.wti.core.security.AutorizacaoInterceptor;
+import br.com.wti.core.security.JwtService;
+import br.com.wti.core.security.JwtServicoInternoService;
 import br.com.wti.core.security.SecurityService;
+import br.com.wti.core.security.ServiceTokenProvider;
 import br.com.wti.core.security.UsuarioAutenticadoDTO;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
@@ -72,6 +75,15 @@ public class TestBase {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected JwtService jwtService;
+
+    @Autowired
+    protected JwtServicoInternoService jwtServicoInternoService;
+
+    @Autowired
+    protected ServiceTokenProvider serviceTokenProvider;
+
     @MockitoBean
     protected AutorizacaoInterceptor autorizacaoInterceptor;
 
@@ -97,6 +109,23 @@ public class TestBase {
     protected void mockUsuario(Long id, String nome, String tipo, Long cooperativaId) {
         UsuarioAutenticadoDTO usuario = new UsuarioAutenticadoDTO(id, nome, tipo, cooperativaId, List.of(), Map.of());
         when(this.securityService.getUsuarioAutenticado()).thenReturn(usuario);
+    }
+
+    // Tokens reais para os cenários que exercem a autorização verdadeira (ver usarAutorizacaoReal
+    // em cada classe de teste). As funcionalidades do cenário entram por parâmetro.
+
+    protected String tokenCentral(List<String> funcionalidades) {
+        return "Bearer " + this.jwtService.gerarToken(1L, "Central Teste", "CENTRAL", null, funcionalidades, Map.of());
+    }
+
+    protected String tokenCooperativa(Long cooperativaId, List<String> funcionalidades) {
+        return "Bearer "
+                + this.jwtService.gerarToken(
+                        100L, "Cooperativa Teste", "COOPERATIVA", cooperativaId, funcionalidades, Map.of());
+    }
+
+    protected String tokenServico() {
+        return "Bearer " + this.serviceTokenProvider.getToken();
     }
 
     protected String carregarPayload(String caminho) {

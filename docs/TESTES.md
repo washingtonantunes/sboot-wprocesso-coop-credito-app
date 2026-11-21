@@ -83,8 +83,16 @@ O `clear.sql` limpa apenas as tabelas de domínio e não apaga as tabelas de aud
 
 ### Helpers de autenticação disponíveis na TestBase
 
+Para o caminho mockado (o interceptor sempre libera; define-se apenas o tipo e a cooperativa do usuário):
+
 - `mockCentral()`
 - `mockCooperativa(cooperativaId)`
+
+Para os cenários que exercem a autorização verdadeira (a classe ativa o interceptor real em um `@BeforeEach`, como em `usarAutorizacaoReal()`), tokens reais já prontos com o prefixo `Bearer`:
+
+- `tokenCentral(funcionalidades)`
+- `tokenCooperativa(cooperativaId, funcionalidades)`
+- `tokenServico()` — token de serviço do canal interno (`/api/**`)
 
 ### Testes de isolamento
 

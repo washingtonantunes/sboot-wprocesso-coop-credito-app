@@ -9,14 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import br.com.wti.TestBase;
 import br.com.wti.core.security.AutorizacaoInterceptor;
-import br.com.wti.core.security.JwtService;
-import br.com.wti.core.security.JwtServicoInternoService;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.AntPathMatcher;
@@ -25,12 +21,6 @@ import org.springframework.util.AntPathMatcher;
 class OperacaoCreditoRuralAutorizacaoControllerTest extends TestBase {
 
     private static final String URL = "/operacoes-credito-rural";
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private JwtServicoInternoService jwtServicoInternoService;
 
     @BeforeEach
     void usarAutorizacaoReal() {
@@ -94,8 +84,8 @@ class OperacaoCreditoRuralAutorizacaoControllerTest extends TestBase {
     }
 
     private String token(String tipo, Long cooperativaId, String funcionalidade) {
-        Long usuarioId = cooperativaId == null ? 1L : 100L;
-        return "Bearer "
-                + jwtService.gerarToken(usuarioId, "Teste", tipo, cooperativaId, List.of(funcionalidade), Map.of());
+        return "CENTRAL".equals(tipo)
+                ? tokenCentral(List.of(funcionalidade))
+                : tokenCooperativa(cooperativaId, List.of(funcionalidade));
     }
 }
