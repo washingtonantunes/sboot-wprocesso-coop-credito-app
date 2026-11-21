@@ -10,7 +10,7 @@ br.com.wti/
 │   └── util/              # Catálogo de auditoria do domínio
 ├── integracao/
 │   └── cadastro/          # Cliente do cadastro pelo canal interno
-└── core/                  # Infraestrutura transversal, copiada sem alteração
+└── core/                  # Infraestrutura transversal
     ├── auditoria/
     ├── cache/
     ├── config/

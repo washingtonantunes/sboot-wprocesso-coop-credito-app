@@ -1,6 +1,6 @@
 # Padrões de testes dos backends
 
-Este documento define os padrões compartilhados pelos projetos Spring Boot do sistema wprocesso.
+Padrões de teste deste projeto.
 
 Os nomes usados nos exemplos são intencionalmente genéricos e devem ser adaptados ao domínio de cada projeto.
 
@@ -79,7 +79,7 @@ Cada classe de teste que redefine os mocks sobe o seu próprio contexto Spring, 
 spring.datasource.url=jdbc:h2:mem:${random.uuid};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;DATABASE_TO_LOWER=TRUE
 ```
 
-O `clear.sql` limpa apenas as tabelas de domínio e não apaga as tabelas de auditoria, assim como nos backs do seguros.
+O `clear.sql` limpa apenas as tabelas de domínio e não apaga as tabelas de auditoria.
 
 ### Helpers de autenticação disponíveis na TestBase
 
