@@ -212,6 +212,57 @@ public class OperacaoCreditoRuralControllerTest extends TestBase {
                         jsonPath("$.mensagemUsuario").value("Operação não está no estado necessário para esta ação"));
     }
 
+    @Test
+    @DisplayName("Deve rejeitar desclassificação parcial com valor igual ou maior que o da operação")
+    void deveRejeitarDesclassificacaoParcialComValorIgualOuMaiorQueODaOperacao() throws Exception {
+        mockCentral();
+        var mensagem = "Valor desclassificado incompatível com o tipo informado";
+        String payload = carregarPayload("/payload/operacao-credito-rural/desclassificar-parcial-valor-invalido.json");
+
+        this.mockMvc
+                .perform(put(OPERACOES_URL + "/101/desclassificar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)
+                        .header("Accept-Language", "pt-BR"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagemUsuario").value(mensagem))
+                .andExpect(jsonPath("$.mensagemDesenvolvedor").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("Deve rejeitar negativa de operação que não está solicitada")
+    void deveRejeitarNegativaDeOperacaoQueNaoEstaSolicitada() throws Exception {
+        mockCentral();
+        var mensagem = "Operação não está no estado necessário para esta ação";
+        String payload = carregarPayload("/payload/operacao-credito-rural/negar.json");
+
+        this.mockMvc
+                .perform(put(OPERACOES_URL + "/101/negar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)
+                        .header("Accept-Language", "pt-BR"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagemUsuario").value(mensagem))
+                .andExpect(jsonPath("$.mensagemDesenvolvedor").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("Deve rejeitar desclassificação de operação que não está aprovada")
+    void deveRejeitarDesclassificacaoDeOperacaoQueNaoEstaAprovada() throws Exception {
+        mockCentral();
+        var mensagem = "Operação não está no estado necessário para esta ação";
+        String payload = carregarPayload("/payload/operacao-credito-rural/desclassificar-parcial.json");
+
+        this.mockMvc
+                .perform(put(OPERACOES_URL + "/100/desclassificar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)
+                        .header("Accept-Language", "pt-BR"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagemUsuario").value(mensagem))
+                .andExpect(jsonPath("$.mensagemDesenvolvedor").isNotEmpty());
+    }
+
     private void mockCadastroAtivo() {
         CooperadoApiResponseDTO cooperado =
                 carregarMock("/integracao/cadastro/cooperado-ativo.json", CooperadoApiResponseDTO.class);
